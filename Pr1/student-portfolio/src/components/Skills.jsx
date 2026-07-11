@@ -8,7 +8,7 @@ function Skills() {
     ];
 
     return (
-        <section className="card">
+        <section id="skills" className="card">
             <h2>Skills</h2>
 
             <div className="skills">

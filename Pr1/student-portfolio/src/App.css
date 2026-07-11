@@ -26,15 +26,23 @@
   left: -100%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(to right, transparent, rgba(255,255,255,0.05), transparent);
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.05), transparent);
   transform: skewX(-20deg);
   animation: shine 6s infinite;
 }
 
 @keyframes shine {
-  0% { left: -100%; }
-  20% { left: 200%; }
-  100% { left: 200%; }
+  0% {
+    left: -100%;
+  }
+
+  20% {
+    left: 200%;
+  }
+
+  100% {
+    left: 200%;
+  }
 }
 
 .header h1 {
@@ -140,4 +148,33 @@
   display: block;
   margin-top: 12px;
   color: #475569;
+}
+
+.navbar {
+  position: sticky;
+  top: 20px;
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(10px);
+  padding: 10px;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  z-index: 100;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navbar a {
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 20px;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+.navbar a.active {
+  background: rgba(96, 165, 250, 0.2);
+  color: #fff;
 }

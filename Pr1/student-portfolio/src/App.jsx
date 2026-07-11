@@ -7,12 +7,14 @@ import Header from "./components/Header"
 import About from "./components/About"
 import Skills from "./components/Skills"
 import Footer from "./components/Footer"
+import NavBar from "./components/NavBar"
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <div className="container">
+      <NavBar />
       <Header name="Bhumi Shah"
         themeColor="#0f6d9f" />
       <About college="CSPIT, Charotar University" />
