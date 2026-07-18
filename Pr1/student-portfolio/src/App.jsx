@@ -1,27 +1,24 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { Routes, Route } from 'react-router-dom'
 import './App.css'
-import Header from "./components/Header"
-import About from "./components/About"
-import Skills from "./components/Skills"
-import Footer from "./components/Footer"
 import NavBar from "./components/NavBar"
+import Footer from "./components/Footer"
+import Home from "./pages/Home"
+import Projects from "./pages/Projects"
+import Contact from "./pages/Contact"
+import NotFound from "./pages/NotFound"
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <div className="container">
       <NavBar />
-      <Header name="Bhumi Shah"
-        themeColor="#0f6d9f" />
-      <About college="CSPIT, Charotar University" />
-      <Skills />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<Projects />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
       <Footer email="bhumishah2406@gmail.com" />
     </div>
   )
 }
-
 export default App
