@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+
 const projectList = [
     {
         title: "InternIQ",
@@ -37,10 +39,74 @@ const projectList = [
     }
 ];
 
+const Spinner = () => (
+    <div className="spinner-container" style={{ textAlign: 'center', padding: '20px' }}>
+        <div className="spinner" style={{
+            border: '4px solid rgba(0,0,0,0.1)',
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            borderLeftColor: '#09f',
+            animation: 'spin 1s linear infinite',
+            display: 'inline-block'
+        }}></div>
+        <p>Loading repositories...</p>
+        <style>{`
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        `}</style>
+    </div>
+);
+
+const ErrorMessage = ({ message, onRetry }) => (
+    <div className="error-message" style={{ textAlign: 'center', padding: '20px', color: '#ff4444' }}>
+        <p>Error: {message}</p>
+        <button
+            onClick={onRetry}
+            style={{
+                padding: '8px 16px',
+                cursor: 'pointer',
+                backgroundColor: '#ff4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                marginTop: '10px'
+            }}
+        >
+            Retry
+        </button>
+    </div>
+);
+
 function Projects() {
+    const [repos, setRepos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const fetchRepos = () => {
+        setLoading(true);
+        setError(null);
+        fetch('https://api.github.com/users/BHUMISHAH2411/repos')
+            .then((res) => {
+                if (!res.ok) throw new Error('Failed to fetch data');
+                return res.json();
+            })
+            .then((data) => setRepos(data))
+            .catch((err) => setError(err.message))
+            .finally(() => setLoading(false));
+    };
+
+    useEffect(() => {
+        fetchRepos();
+    }, []);
+
+    const filteredRepos = repos.filter(repo =>
+        repo.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <section id="projects" className="card projects-section">
-            <h2>Projects</h2>
+            <h2>Featured Projects</h2>
             <div className="projects-grid">
                 {projectList.map((project) => (
                     <div className="project-card" key={project.title}>
@@ -70,6 +136,58 @@ function Projects() {
                     </div>
                 ))}
             </div>
+
+            <h2 style={{ marginTop: '60px', marginBottom: '20px' }}>My GitHub Repositories</h2>
+
+            <div style={{ marginBottom: '30px', textAlign: 'center' }}>
+                <input
+                    type="text"
+                    placeholder="Search repositories by name..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{
+                        padding: '10px 15px',
+                        width: '100%',
+                        maxWidth: '400px',
+                        borderRadius: '8px',
+                        border: '1px solid #ddd',
+                        fontSize: '16px'
+                    }}
+                />
+            </div>
+
+            {loading && <Spinner />}
+            {error && <ErrorMessage message={error} onRetry={fetchRepos} />}
+
+            {!loading && !error && (
+                <div className="projects-grid">
+                    {filteredRepos.map((repo) => (
+                        <div className="project-card" key={repo.id}>
+                            <div className="project-header">
+                                <h3>{repo.name}</h3>
+                                { }
+                            </div>
+                            <p className="project-subtitle">
+                                {repo.description || "No description provided."}
+                            </p>
+                            <a
+                                href={repo.html_url}
+                                className="project-github"
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{ marginTop: '15px', display: 'inline-block' }}
+                            >
+                                View on GitHub
+                            </a>
+                        </div>
+                    ))}
+                    {!loading && !error && filteredRepos.length === 0 && (
+                        <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '40px' }}>
+                            <p>No repositories found matching "{searchTerm}".</p>
+                        </div>
+                    )}
+                </div>
+            )}
         </section>
     );
 }
